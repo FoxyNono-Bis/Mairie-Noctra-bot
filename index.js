@@ -19,6 +19,9 @@ const {
     ButtonStyle 
 } = require('discord.js');
 
+// Module Node.js pour créer le mini serveur HTTP pour Render
+const http = require('http');
+
 // Chargement des variables d'environnement depuis le fichier .env
 require('dotenv').config();
 
@@ -29,7 +32,7 @@ require('dotenv').config();
 // Création de l'instance du bot avec les "Intents" (permissions d'accès aux données du serveur)
 const client = new Client({
     intents: [
-        GatewayIntentBits.Guilds,           // Gestion des serveurs et des salons
+        GatewayIntentBits.Guilds,          // Gestion des serveurs et des salons
         GatewayIntentBits.GuildMessages,    // Lecture des messages des salons
         GatewayIntentBits.GuildMembers,     // Récupération des membres et de leurs rôles
         GatewayIntentBits.DirectMessages    // Envoi de messages privés (DM) aux utilisateurs
@@ -420,6 +423,19 @@ client.on('interactionCreate', async interaction => {
 });
 
 // ==========================================
-// 5. CONNEXION DU BOT À DISCORD
+// 5. MINI SERVEUR HTTP POUR SATISFAIRE RENDER (GRATUIT)
+// ==========================================
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Bot Mairie actif et en ligne !\n');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Serveur HTTP de validation Render en écoute sur le port ${PORT}`);
+});
+
+// ==========================================
+// 6. CONNEXION DU BOT À DISCORD
 // ==========================================
 client.login(process.env.DISCORD_TOKEN);
